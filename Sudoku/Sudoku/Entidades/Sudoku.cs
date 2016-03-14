@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace SudokuApp.Entidades
@@ -38,6 +39,11 @@ namespace SudokuApp.Entidades
 
         public bool ValidarEntrada(int linha, int coluna, int numero)
         {
+            if (Tabela[linha][coluna] != 0)
+            {
+                return false;
+            }
+
             var contemLinhaColuna = Tabela[linha].Contains(numero);
             if (contemLinhaColuna)
             {
@@ -45,9 +51,9 @@ namespace SudokuApp.Entidades
             }
             else
             {
-                for (int i = 0; i < Colunas; i++)
+                for (int i = 0; i < Linhas; i++)
                 {
-                    if (Tabela[linha][i] == numero)
+                    if (Tabela[i][coluna] == numero)
                     {
                         return false;
                     }
@@ -70,7 +76,7 @@ namespace SudokuApp.Entidades
             return true;
         }
 
-        public void Run()
+        public virtual void Run()
         {
             InicializarContexto();
             var coluna = 0;
@@ -79,43 +85,42 @@ namespace SudokuApp.Entidades
             Preencher(linha, coluna, numero);
         }
 
-        public bool Preencher(int linha, int coluna, int numero)
+        
+        #endregion
+
+        #region Métodos Protegidos
+
+        protected virtual bool Preencher(int linha, int coluna, int numero)
         {
-            var possivel = ValidarEntrada(linha, coluna, numero);
-            var inserido = false;
-            if (possivel)
+            while (numero <= 9)
             {
-                Tabela[linha][coluna] = numero;
-                inserido = true;
-                coluna++;
-                if (coluna >= 9)
+                var possivel = ValidarEntrada(linha, coluna, numero);
+                if (possivel)
                 {
-                    linha++;
-                    if (linha >= 9)
+                    Tabela[linha][coluna] = numero;
+                    if (TodosPreenchidos())
                     {
                         return true;
                     }
-                    coluna = 0;
+                    var proximaLinha = ProximaLinha(linha, coluna);
+                    var proximaColuna = ProximaColuna(linha, coluna);
+
+                    if (!Preencher(proximaLinha, proximaColuna, 1))
+                    {
+                        Tabela[linha][coluna] = 0;
+                    }
+                    else
+                    {
+                        return true;
+                    }
                 }
-                numero = 1;
-                Preencher(linha, coluna, numero);
-            }
-            else
-            {
                 numero++;
-                if (numero <= 9)
-                {
-                    inserido = Preencher(linha, coluna, numero);
-                    
-                }
             }
-            return inserido;
+
+            return false;
         }
-        #endregion
 
-        #region Métodos Privados
-
-        private void InicializarContexto()
+        protected void InicializarContexto()
         {
             Tabela = new int[Linhas][];
             for (int i = 0; i < Colunas; i++)
@@ -142,13 +147,33 @@ namespace SudokuApp.Entidades
             };
         }
 
-        #endregion
-
-        #region Métodos Protegidos
+        protected int ProximaLinha(int linha, int coluna)
+        {
+            return coluna >= 8 ? linha + 1 : linha;
+        }
+        protected int ProximaColuna(int linha, int coluna)
+        {
+            return coluna >= 8 ? 0 : coluna + 1;
+        }
 
         protected Quadro RetornarNumeroQuadro(int linha, int coluna)
         {
             return PossiveisQuadros.Where(x => linha <= x.LinhaMaxima && linha >= x.LinhaMinima && coluna >= x.ColunaMinima && coluna <= x.ColunaMaxima).FirstOrDefault();
+        }
+
+        protected bool TodosPreenchidos()
+        {
+            for (int i = 0; i < Linhas; i++)
+            {
+                for (int j = 0; j < Colunas; j++)
+                {
+                    if (Tabela[i][j] == 0)
+                    {
+                        return false;
+                    }
+                }
+            }
+            return true;
         }
 
         #endregion

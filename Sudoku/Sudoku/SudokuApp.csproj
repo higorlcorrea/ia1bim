@@ -43,6 +43,7 @@
   <ItemGroup>
     <Compile Include="Entidades\Quadro.cs" />
     <Compile Include="Entidades\Sudoku.cs" />
+    <Compile Include="Entidades\SudokuEmpirico.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
