@@ -27,11 +27,20 @@ textarea {
     text-align: center;
 }
 
-.table.table-bordered {
-    border-right: 0px;
-    border-left: 0px;
+.selected, .selected input{
+    background-color:#37ff48;
 }
 
+.table.table-bordered {
+    width:459px;
+    height:459px;
+    border-right: 0px;
+    border-left: 0px;
+    margin: 0 auto;
+}
+.table.table-bordered td{
+    vertical-align:middle;
+}
     .table.table-bordered tr td:nth-child(3n):not(:last-child){
         border-right-color: black;
     }
@@ -61,3 +70,54 @@ td input{
     -webkit-transition:none !important;
     transition:none !important;
 }
+
+.tdselected:not(.selected),.tdselected:not(.selected) input{
+    background-color:#fffb3e;
+}
+.text-center{
+    text-align:center;
+}
+
+/*LOADER*/
+
+#loader {
+  width: 100px;
+  height: 40px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin: -20px -50px;
+  z-index: 99999;
+}
+#loader div {
+	width: 20px;
+  height: 20px;
+	background: #FFF;
+  border-radius: 50%;
+  position: absolute; 
+
+}
+#d1 { animation: animate 2s linear infinite;}
+#d2 { animation: animate 2s linear infinite -.4s; }
+#d3 {animation: animate 2s linear infinite -.8s; }
+#d4 { animation: animate 2s linear infinite -1.2s; } 
+#d5 { animation: animate 2s linear infinite -1.6s; }
+@-webkit-keyframes animate {
+  0% { left: 100px; top:0}
+  80% { left: 0; top:0;}
+  85% { left: 0; top: -20px; width: 20px; height: 20px;}
+  90% { width: 40px; height: 15px; }
+  95% { left: 100px; top: -20px; width: 20px; height: 20px;}
+  100% { left: 100px; top:0; }
+}
+
+#hideAll
+ {
+   position: fixed;
+   left: 0px; 
+   right: 0px; 
+   top: 0px; 
+   bottom: 0px; 
+   background-color: #4e4e4e;
+   z-index: 9999;
+ }

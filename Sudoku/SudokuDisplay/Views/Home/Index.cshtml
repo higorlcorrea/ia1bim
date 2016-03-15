@@ -2,17 +2,42 @@
 @{
     ViewBag.Title = "Home Page";
 }
+<div id="modalError" style="display:none;" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Operação inválida!</h4>
+            </div>
+            <div class="modal-body">
 
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Ok</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div>
+
+<div id="hideAll" style="display:none;"></div>
+<div id="loader" style="display:none;">
+
+    <div id="d1"></div>
+    <div id="d2"></div>
+    <div id="d3"></div>
+    <div id="d4"></div>
+    <div id="d5"></div>
+</div>
 <br />
 <div class="">
 
     <ul class="nav nav-tabs" role="tablist">
-        <li role="presentation" class="@(Model.IsBackTrack ? " active" : "")"><a href="#burro" aria-controls="home" role="tab" data-toggle="tab">BackTrack</a></li>
-        <li role="presentation" class="@(Model.IsBackTrack ? "": " active")"><a href="#empirico" aria-controls="settings" role="tab" data-toggle="tab">Empírico</a></li>
+        <li role="presentation" class="@(Model.IsBackTrack ? " active" : "" )"><a href=" #burro" aria-controls="burro" role="tab" data-toggle="tab">BackTrack</a></li>
+        <li role="presentation" class="@(Model.IsBackTrack ? " ": " active")"><a href="#empirico" aria-controls="empirico" role="tab" data-toggle="tab">Empírico</a></li>
     </ul>
 
     <div class="tab-content">
-        <div role="tabpanel" class="tab-pane@(Model.IsBackTrack ? " active": "")" id="burro">
+        <div role="tabpanel" class="tab-pane@(Model.IsBackTrack ? " active" : "" )" id=" burro">
             @{Html.BeginForm("Backtrack", "Home", FormMethod.Post);}
             <div class="row">
                 <div class="col-md-12">
@@ -33,17 +58,15 @@
                     </table>
                 </div>
             </div>
-            <div class="row">
-                <div class="col-md-3">
-                    <button class="btn btn-primary btn-raise">Completar</button>
-                </div>
-                <div class="col-md-3">
-                    <button class="btn btn-secondary btn-raise limpar" type="button">Limpar</button>
-                </div>
+            <div class="row text-center">
+                <br />
+                @Html.HiddenFor(x => Model.IsBackTrack, new { Value = true})
+                <button class="btn btn-primary btn-raise" style="margin-right:50px;">Completar</button>
+                <button class="btn btn-secondary btn-raise limpar" type="button">Limpar</button>
             </div>
             @{Html.EndForm();}
         </div>
-        <div role="tabpanel" class="tab-pane@(Model.IsBackTrack ? "" : " active")" id="empirico">
+        <div role="tabpanel" class="tab-pane@(Model.IsBackTrack ? " " : " active")" id="empirico">
             @{Html.BeginForm("Empirico", "Home", FormMethod.Post);}
             <div class="row">
                 <div class="col-md-12">
@@ -64,13 +87,11 @@
                     </table>
                 </div>
             </div>
-            <div class="row">
-                <div class="col-md-2">
-                    <button class="btn btn-primary btn-raise">Completar</button>
-                </div>
-                <div class="col-md-2">
-                    <button class="btn btn-secondary btn-raise limpar" type="button">Limpar</button>
-                </div>
+            <div class="row text-center">
+                <br />
+                @Html.HiddenFor(x => Model.IsBackTrack, new { Value = false })
+                <button class="btn btn-primary btn-raise" style="margin-right:50px;">Completar</button>
+                <button class="btn btn-secondary btn-raise limpar" type="button">Limpar</button>
             </div>
             @{Html.EndForm();}
         </div>
@@ -80,13 +101,97 @@
 
 @section scripts{
     <script>
+        function showLoader() {
+            $('#hideAll, #loader').removeAttr('style');
+        }
+
+        function hideLoader() {
+            $('#hideAll, #loader').attr('style', 'display:none;');
+        }
+
         $('.input-sudoku').mask('9');
         $(document).ready(function () {
             $('.limpar').click(function () {
                 var $this = $(this);
+                $this.parents('form').find('input:not(:hidden)').val('');
+                $this.parents('form').find('input:not(:hidden)').attr('value', '');
+                $('.selected').removeClass('selected');
+            });
 
-                $this.parents('form').find('input').val('');
+            $('td input.input-sudoku').click(function () {
+                var $input = $(this);
+
+                $('.selected').removeClass('selected');
+                if ($input.val() != '') {
+                    $('input[value="' + $input.val() + '"]').parent().addClass('selected');
+                }
+
+            });
+
+            $(document).on('input', 'input.input-sudoku', function () {
+                var $input = $(this);
+                if ($input.val() == '0') {
+                    $input.val('');
+                    $input.attr('value', $input.val());
+                }
+                else {
+                    $input.attr('value', $input.val());
+
+                    $('.selected').removeClass('selected');
+                    if ($input.val() != '') {
+
+                        $input.parents('form').find('input[value="' + $input.val() + '"]').parent().addClass('selected');
+                    }
+
+                    if ($input.val() != '' && $input.val() != '0') {
+
+                        var name = $input.attr('name').split('][');
+
+                        var coluna = name[1][0];
+                        var linha = name[0][name[0].length - 1];
+
+                        $.ajax({
+                            url: '/Home/ValidarEntrada/',
+                            method: 'POST',
+                            beforeSend: function (xhr) {
+                                xhr.overrideMimeType("text/plain; charset=utf-8");
+                                showLoader();
+                            },
+                            data: $(this).parents('form').serialize() + '&linha=' + linha + '&coluna=' + coluna,
+                            success: function (retorno) {
+                                retorno = JSON.parse(retorno);
+                                if (!retorno.Success) {
+                                    $input.val('');
+                                    $('#modalError').find('.modal-body').html('<h3>' + retorno.Erro + '</h3>');
+                                    $('#modalError').modal();
+                                    $input.parent().removeClass('selected');
+                                }
+                            }
+                        }).done(function () { hideLoader() });
+                    }
+                }
             })
         })
+
+        $(document).on('mouseover', 'td', function () {
+
+            $('.tdselected').removeClass('tdselected');
+
+            var $td = $(this);
+
+            var $tr = $td.parent();
+
+            $tr.find('td').addClass('tdselected');
+
+            var index = $tr.find('td').toArray().indexOf($td[0]);
+
+            $tbody = $tr.parent();
+
+            $tbody.find('tr').each(function () {
+                var $tdInner = $($(this).find('td')[index]);
+                $tdInner.addClass('tdselected');
+            })
+
+        });
     </script>
 }

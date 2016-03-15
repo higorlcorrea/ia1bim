@@ -90,8 +90,8 @@ namespace SudokuDisplay.Models
                 else
                 {
                     Preencher(proximaLinha, proximaColuna);
+                    return false;
                 }
-                return true;
             }
             else
             {
@@ -122,6 +122,40 @@ namespace SudokuDisplay.Models
                 return false;
             }
 
+        }
+
+        public bool ValidarEntrada(int linha, int coluna, int numero)
+        {
+            var contemLinhaColuna = Tabela[linha].Contains(numero);
+            if (contemLinhaColuna)
+            {
+                return false;
+            }
+            else
+            {
+                for (int i = 0; i < Linhas; i++)
+                {
+                    if (Tabela[i][coluna] == numero)
+                    {
+                        return false;
+                    }
+                }
+            }
+
+            var quadro = RetornarNumeroQuadro(linha, coluna);
+
+            for (int i = quadro.LinhaMinima; i <= quadro.LinhaMaxima; i++)
+            {
+                for (int j = quadro.ColunaMinima; j <= quadro.ColunaMaxima; j++)
+                {
+                    if (Tabela[i][j] == numero)
+                    {
+                        return false;
+                    }
+                }
+            }
+
+            return true;
         }
 
         #endregion

@@ -64,7 +64,7 @@ namespace SudokuDisplay.Models
 
         #region Métodos Protegidos
 
-        protected bool ValidarEntrada(int linha, int coluna, int numero)
+        public bool ValidarEntrada(int linha, int coluna, int numero)
         {
             var contemLinhaColuna = Tabela[linha].Contains(numero);
             if (contemLinhaColuna)
@@ -102,43 +102,54 @@ namespace SudokuDisplay.Models
         {
             int proximaLinha = 0;
             int proximaColuna = 0;
-            if (Tabela[linha][coluna].HasValue)
+            if (linha < 9 && coluna < 9)
             {
-                proximaLinha = ProximaLinha(linha, coluna);
-                proximaColuna = ProximaColuna(linha, coluna);
-                Preencher(proximaLinha, proximaColuna, 1);
-                return true;
-            }
-            else
-            {
-                while (numero <= 9)
+
+                if (Tabela[linha][coluna].HasValue)
                 {
-
-                    var possivel = ValidarEntrada(linha, coluna, numero);
-                    if (possivel)
+                    proximaLinha = ProximaLinha(linha, coluna);
+                    proximaColuna = ProximaColuna(linha, coluna);
+                    Preencher(proximaLinha, proximaColuna, 1);
+                    if (TodosPreenchidos())
                     {
-                        Tabela[linha][coluna] = numero;
-                        if (TodosPreenchidos())
-                        {
-                            return true;
-                        }
-                        proximaLinha = ProximaLinha(linha, coluna);
-                        proximaColuna = ProximaColuna(linha, coluna);
-
-                        if (!Preencher(proximaLinha, proximaColuna, 1))
-                        {
-                            Tabela[linha][coluna] = null;
-                        }
-                        else
-                        {
-                            return true;
-                        }
+                        return true;
                     }
-                    numero++;
+                    else
+                    {
+                        return false;
+                    }
                 }
-                return false;
-            }
+                else
+                {
+                    while (numero <= 9)
+                    {
 
+                        var possivel = ValidarEntrada(linha, coluna, numero);
+                        if (possivel)
+                        {
+                            Tabela[linha][coluna] = numero;
+                            if (TodosPreenchidos())
+                            {
+                                return true;
+                            }
+                            proximaLinha = ProximaLinha(linha, coluna);
+                            proximaColuna = ProximaColuna(linha, coluna);
+
+                            if (!Preencher(proximaLinha, proximaColuna, 1))
+                            {
+                                Tabela[linha][coluna] = null;
+                            }
+                            else
+                            {
+                                return true;
+                            }
+                        }
+                        numero++;
+                    }
+                    return false;
+                }
+            }
+            return true;
         }
 
         protected void InicializarContexto()
