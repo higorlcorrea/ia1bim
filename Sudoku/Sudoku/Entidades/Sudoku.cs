@@ -90,7 +90,7 @@ namespace SudokuApp.Entidades
 
         #region Métodos Protegidos
 
-        protected virtual bool Preencher(int linha, int coluna, int numero)
+        public virtual bool Preencher(int linha, int coluna, int numero)
         {
             while (numero <= 9)
             {
