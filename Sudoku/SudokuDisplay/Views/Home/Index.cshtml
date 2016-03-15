@@ -1,0 +1,92 @@
+﻿@model SudokuViewModel
+@{
+    ViewBag.Title = "Home Page";
+}
+
+<br />
+<div class="">
+
+    <ul class="nav nav-tabs" role="tablist">
+        <li role="presentation" class="@(Model.IsBackTrack ? " active" : "")"><a href="#burro" aria-controls="home" role="tab" data-toggle="tab">BackTrack</a></li>
+        <li role="presentation" class="@(Model.IsBackTrack ? "": " active")"><a href="#empirico" aria-controls="settings" role="tab" data-toggle="tab">Empírico</a></li>
+    </ul>
+
+    <div class="tab-content">
+        <div role="tabpanel" class="tab-pane@(Model.IsBackTrack ? " active": "")" id="burro">
+            @{Html.BeginForm("Backtrack", "Home", FormMethod.Post);}
+            <div class="row">
+                <div class="col-md-12">
+                    <table class="table table-bordered">
+                        <tbody>
+                            @for (int i = 0; i < Model.Sudoku.Linhas; i++)
+                            {
+                                <tr>
+                                    @for (int j = 0; j < Model.Sudoku.Colunas; j++)
+                                    {
+                                        <td>
+                                            @Html.TextBoxFor(x => Model.Sudoku.Tabela[i][j], new { @class = "form-control input-sudoku", Value = Model.Sudoku.Tabela != null && Model.Sudoku.Tabela[i][j].HasValue ? Model.Sudoku.Tabela[i][j].ToString() : "" })
+                                        </td>
+                                    }
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-3">
+                    <button class="btn btn-primary btn-raise">Completar</button>
+                </div>
+                <div class="col-md-3">
+                    <button class="btn btn-secondary btn-raise limpar" type="button">Limpar</button>
+                </div>
+            </div>
+            @{Html.EndForm();}
+        </div>
+        <div role="tabpanel" class="tab-pane@(Model.IsBackTrack ? "" : " active")" id="empirico">
+            @{Html.BeginForm("Empirico", "Home", FormMethod.Post);}
+            <div class="row">
+                <div class="col-md-12">
+                    <table class="table table-bordered">
+                        <tbody>
+                            @for (int i = 0; i < Model.SudokuEmpirico.Linhas; i++)
+                            {
+                                <tr>
+                                    @for (int j = 0; j < Model.SudokuEmpirico.Colunas; j++)
+                                    {
+                                        <td>
+                                            @Html.TextBoxFor(x => Model.SudokuEmpirico.Tabela[i][j], new { @class = "form-control input-sudoku", Value = Model.SudokuEmpirico.Tabela != null && Model.SudokuEmpirico.Tabela[i][j].HasValue ? Model.SudokuEmpirico.Tabela[i][j].ToString() : "" })
+                                        </td>
+                                    }
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-2">
+                    <button class="btn btn-primary btn-raise">Completar</button>
+                </div>
+                <div class="col-md-2">
+                    <button class="btn btn-secondary btn-raise limpar" type="button">Limpar</button>
+                </div>
+            </div>
+            @{Html.EndForm();}
+        </div>
+    </div>
+
+</div>
+
+@section scripts{
+    <script>
+        $('.input-sudoku').mask('9');
+        $(document).ready(function () {
+            $('.limpar').click(function () {
+                var $this = $(this);
+
+                $this.parents('form').find('input').val('');
+            })
+        })
+    </script>
+}

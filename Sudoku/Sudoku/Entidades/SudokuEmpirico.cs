@@ -15,41 +15,64 @@ namespace SudokuApp.Entidades
             return new List<int> { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
         }
 
+        protected void VerificarNumeros(int linha, int coluna, List<int> numeros)
+        {
+            numeros.RemoveAll(x => Tabela[linha].Contains(x));
+
+            for (int i = 0; i < Linhas; i++)
+            {
+                numeros.Remove(Tabela[i][coluna]);
+            }
+
+            var quadro = RetornarNumeroQuadro(linha, coluna);
+
+            for (int i = quadro.LinhaMinima; i <= quadro.LinhaMaxima; i++)
+            {
+                for (int j = quadro.ColunaMinima; j <= quadro.ColunaMaxima; j++)
+                {
+                    numeros.Remove(Tabela[i][j]);
+                }
+            }
+        }
+
         #endregion
 
         #region Métodos Públicos
 
         public override void Run()
         {
-            base.Run();
+            InicializarContexto();
+            var coluna = 0;
+            var linha = 0;
+            Preencher(linha, coluna);
         }
 
-        public override bool Preencher(int linha, int coluna, int numero)
+        public bool Preencher(int linha, int coluna)
         {
-            while (numero <= 9)
-            {
-                //PAREI AQUI!
-                var possivel = ValidarEntrada(linha, coluna, numero);
-                if (possivel)
-                {
-                    Tabela[linha][coluna] = numero;
-                    if (TodosPreenchidos())
-                    {
-                        return true;
-                    }
-                    var proximaLinha = ProximaLinha(linha, coluna);
-                    var proximaColuna = ProximaColuna(linha, coluna);
+            var numeros = TodosNumeros();
+            VerificarNumeros(linha, coluna, numeros);
 
-                    if (!Preencher(proximaLinha, proximaColuna, 1))
-                    {
-                        Tabela[linha][coluna] = 0;
-                    }
-                    else
-                    {
-                        return true;
-                    }
+            while (numeros.Count > 0)
+            {
+                var numero = numeros.First();
+                numeros.Remove(numero);
+
+                Tabela[linha][coluna] = numero;
+                if (TodosPreenchidos())
+                {
+                    return true;
                 }
-                numero++;
+                var proximaLinha = ProximaLinha(linha, coluna);
+                var proximaColuna = ProximaColuna(linha, coluna);
+
+                if (!Preencher(proximaLinha, proximaColuna))
+                {
+                    Tabela[linha][coluna] = 0;
+                }
+                else
+                {
+                    return true;
+                }
             }
 
             return false;
