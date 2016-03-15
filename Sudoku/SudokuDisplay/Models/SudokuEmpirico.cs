@@ -83,13 +83,14 @@ namespace SudokuDisplay.Models
             {
                 proximaLinha = ProximaLinha(linha, coluna);
                 proximaColuna = ProximaColuna(linha, coluna);
+                Preencher(proximaLinha, proximaColuna);
+
                 if (TodosPreenchidos())
                 {
                     return true;
                 }
                 else
                 {
-                    Preencher(proximaLinha, proximaColuna);
                     return false;
                 }
             }

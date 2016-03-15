@@ -32,12 +32,12 @@
 <div class="">
 
     <ul class="nav nav-tabs" role="tablist">
-        <li role="presentation" class="@(Model.IsBackTrack ? " active" : "" )"><a href=" #burro" aria-controls="burro" role="tab" data-toggle="tab">BackTrack</a></li>
-        <li role="presentation" class="@(Model.IsBackTrack ? " ": " active")"><a href="#empirico" aria-controls="empirico" role="tab" data-toggle="tab">Empírico</a></li>
+        <li role="presentation" class="@(Model.IsBackTrack ? "active" : "" )"><a href="#burro" aria-controls="burro" role="tab" data-toggle="tab">BackTrack</a></li>
+        <li role="presentation" class="@(Model.IsBackTrack ? " ": "active")"><a href="#empirico" aria-controls="empirico" role="tab" data-toggle="tab">Empírico</a></li>
     </ul>
 
     <div class="tab-content">
-        <div role="tabpanel" class="tab-pane@(Model.IsBackTrack ? " active" : "" )" id=" burro">
+        <div role="tabpanel" class="tab-pane@(Model.IsBackTrack ? " active" : "" )" id="burro">
             @{Html.BeginForm("Backtrack", "Home", FormMethod.Post);}
             <div class="row">
                 <div class="col-md-12">
@@ -60,7 +60,7 @@
             </div>
             <div class="row text-center">
                 <br />
-                @Html.HiddenFor(x => Model.IsBackTrack, new { Value = true})
+                @Html.HiddenFor(x => x.IsBackTrack, new { Value = true })
                 <button class="btn btn-primary btn-raise" style="margin-right:50px;">Completar</button>
                 <button class="btn btn-secondary btn-raise limpar" type="button">Limpar</button>
             </div>
@@ -89,7 +89,7 @@
             </div>
             <div class="row text-center">
                 <br />
-                @Html.HiddenFor(x => Model.IsBackTrack, new { Value = false })
+                @Html.HiddenFor(x => x.IsBackTrack, new { Value = false })
                 <button class="btn btn-primary btn-raise" style="margin-right:50px;">Completar</button>
                 <button class="btn btn-secondary btn-raise limpar" type="button">Limpar</button>
             </div>
@@ -111,6 +111,9 @@
 
         $('.input-sudoku').mask('9');
         $(document).ready(function () {
+            
+            $('li.active').click();
+            
             $('.limpar').click(function () {
                 var $this = $(this);
                 $this.parents('form').find('input:not(:hidden)').val('');
