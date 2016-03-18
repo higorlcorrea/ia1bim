@@ -10,7 +10,10 @@
                 <h4 class="modal-title">Operação inválida!</h4>
             </div>
             <div class="modal-body">
-
+                @if (!Model.Possivel)
+                {
+                    <img src="/imagens/erro.jpg" id="erro" />
+                }
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Ok</button>
@@ -111,9 +114,9 @@
 
         $('.input-sudoku').mask('9');
         $(document).ready(function () {
-            
+
             $('li.active').click();
-            
+
             $('.limpar').click(function () {
                 var $this = $(this);
                 $this.parents('form').find('input:not(:hidden)').val('');
@@ -165,6 +168,7 @@
                                 retorno = JSON.parse(retorno);
                                 if (!retorno.Success) {
                                     $input.val('');
+                                    $input.attr('value','');
                                     $('#modalError').find('.modal-body').html('<h3>' + retorno.Erro + '</h3>');
                                     $('#modalError').modal();
                                     $input.parent().removeClass('selected');
@@ -196,5 +200,14 @@
             })
 
         });
+
+        $('form').submit(function () {
+            showLoader();
+        })
+        $(document).ready(function () {
+            if ($('#erro').length > 0) {
+                $('#modalError').modal();
+            }
+        })
     </script>
 }

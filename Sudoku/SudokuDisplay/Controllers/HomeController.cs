@@ -20,6 +20,11 @@ namespace SudokuDisplay.Controllers
         public ActionResult Empirico(SudokuViewModel model)
         {
             model.SudokuEmpirico.Run();
+            if (model.SudokuEmpirico.TodosPreenchidos())
+            {
+                model.Possivel = true;
+            }
+
             model.IsBackTrack = false;
 
             return View("Index", model);
@@ -29,6 +34,11 @@ namespace SudokuDisplay.Controllers
         public ActionResult Backtrack(SudokuViewModel model)
         {
             model.Sudoku.Run();
+            if (model.Sudoku.TodosPreenchidos())
+            {
+                model.Possivel = true;
+            }
+
             model.IsBackTrack = true;
 
             return View("Index", model);
@@ -73,6 +83,28 @@ namespace SudokuDisplay.Controllers
             }
 
             return Json(new { Success = sucesso, Erro = erro });
+        }
+
+        public ActionResult Aleatorio(SudokuViewModel model)
+        {
+            var sudokuAuxiliar = new Sudoku();
+            sudokuAuxiliar.InicializarContexto();
+
+            for (int i = 0; i < 20; i++)
+            {
+                
+            }
+
+            if (model.IsBackTrack)
+            {
+
+            }
+            else
+            {
+
+            }
+
+            return View("Index", model);
         }
     }
 }

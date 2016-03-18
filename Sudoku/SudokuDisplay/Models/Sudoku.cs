@@ -152,7 +152,7 @@ namespace SudokuDisplay.Models
             return true;
         }
 
-        protected void InicializarContexto()
+        public void InicializarContexto()
         {
             Tabela = new int?[Linhas][];
             for (int i = 0; i < Colunas; i++)
@@ -176,7 +176,7 @@ namespace SudokuDisplay.Models
             return PossiveisQuadros.Where(x => linha <= x.LinhaMaxima && linha >= x.LinhaMinima && coluna >= x.ColunaMinima && coluna <= x.ColunaMaxima).FirstOrDefault();
         }
 
-        protected bool TodosPreenchidos()
+        public bool TodosPreenchidos()
         {
             for (int i = 0; i < Linhas; i++)
             {

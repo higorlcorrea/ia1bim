@@ -15,6 +15,8 @@ namespace SudokuDisplay.Models
 
         public bool IsBackTrack { get; set; }
 
+        public bool Possivel { get; set; }
+
         #endregion
 
         #region Construtores
