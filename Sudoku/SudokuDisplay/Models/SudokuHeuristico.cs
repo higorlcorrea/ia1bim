@@ -3,11 +3,11 @@ using System.Linq;
 
 namespace SudokuDisplay.Models
 {
-    public class SudokuEmpirico : Sudoku
+    public class SudokuHeuristico : Sudoku
     {
         #region Construtores
 
-        public SudokuEmpirico()
+        public SudokuHeuristico()
         {
             PossiveisQuadros = new List<Quadro>
             {

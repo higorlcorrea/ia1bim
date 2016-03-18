@@ -17,10 +17,10 @@ namespace SudokuDisplay.Controllers
         }
 
         [HttpPost]
-        public ActionResult Empirico(SudokuViewModel model)
+        public ActionResult Heuristico(SudokuViewModel model)
         {
-            model.SudokuEmpirico.Run();
-            if (model.SudokuEmpirico.TodosPreenchidos())
+            model.SudokuHeuristico.Run();
+            if (model.SudokuHeuristico.TodosPreenchidos())
             {
                 model.Possivel = true;
             }
@@ -40,6 +40,66 @@ namespace SudokuDisplay.Controllers
             }
 
             model.IsBackTrack = true;
+
+            return View("Index", model);
+        }
+
+        public ActionResult Aleatorio(SudokuViewModel model)
+        {
+            if (model.NumerosAleatorios.HasValue && model.NumerosAleatorios.Value > 0 && model.NumerosAleatorios.Value < 81)
+            {
+                var linha = 0;
+                var coluna = 0;
+                var numero = 0;
+                var random = new Random();
+                var sudoku = new Sudoku();
+                var valido = false;
+                var tentativas = 0;
+                sudoku.InicializarContexto();
+                var preenchidas = new List<string>();
+
+                for (int i = 0; i < model.NumerosAleatorios.Value; i++)
+                {
+                    while (!valido && tentativas < 3000)
+                    {
+
+                        linha = random.Next(8);
+                        coluna = random.Next(8);
+
+                        numero = random.Next(1, 9);
+
+                        if (preenchidas.Where(x => x == linha + "," + coluna).Count() == 0 && sudoku.ValidarEntrada(linha, coluna, numero))
+                        {
+                            sudoku.Tabela[linha][coluna] = numero;
+                            preenchidas.Add(linha + "," + coluna);
+                            valido = true;
+                        }
+                        else
+                        {
+                            tentativas++;
+                        }
+                    }
+                    if (tentativas == 3000)
+                    {
+                        i = 0;
+                        preenchidas.Clear();
+                        sudoku.InicializarContexto();
+                    }
+
+                    tentativas = 0;
+                    valido = false;
+                }
+
+                if (model.IsBackTrack)
+                {
+                    model.Sudoku.Tabela = sudoku.Tabela;
+                }
+                else
+                {
+                    model.SudokuHeuristico.Tabela = sudoku.Tabela;
+                }
+
+            }
 
             return View("Index", model);
         }
@@ -67,11 +127,11 @@ namespace SudokuDisplay.Controllers
             }
             else
             {
-                var numero = model.SudokuEmpirico.Tabela[linha][coluna];
-                model.SudokuEmpirico.Tabela[linha][coluna] = null;
+                var numero = model.SudokuHeuristico.Tabela[linha][coluna];
+                model.SudokuHeuristico.Tabela[linha][coluna] = null;
                 if (numero.HasValue)
                 {
-                    if (model.SudokuEmpirico.ValidarEntrada(linha, coluna, numero.Value))
+                    if (model.SudokuHeuristico.ValidarEntrada(linha, coluna, numero.Value))
                     {
                         sucesso = true;
                     }
@@ -83,28 +143,6 @@ namespace SudokuDisplay.Controllers
             }
 
             return Json(new { Success = sucesso, Erro = erro });
-        }
-
-        public ActionResult Aleatorio(SudokuViewModel model)
-        {
-            var sudokuAuxiliar = new Sudoku();
-            sudokuAuxiliar.InicializarContexto();
-
-            for (int i = 0; i < 20; i++)
-            {
-                
-            }
-
-            if (model.IsBackTrack)
-            {
-
-            }
-            else
-            {
-
-            }
-
-            return View("Index", model);
         }
     }
 }
