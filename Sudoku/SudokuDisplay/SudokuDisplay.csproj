@@ -163,7 +163,7 @@
     </Compile>
     <Compile Include="Models\Quadro.cs" />
     <Compile Include="Models\Sudoku.cs" />
-    <Compile Include="Models\SudokuEmpirico.cs" />
+    <Compile Include="Models\SudokuHeuristico.cs" />
     <Compile Include="Models\SudokuViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />

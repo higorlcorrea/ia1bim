@@ -152,7 +152,7 @@ namespace SudokuDisplay.Models
             return true;
         }
 
-        protected void InicializarContexto()
+        public void InicializarContexto()
         {
             Tabela = new int?[Linhas][];
             for (int i = 0; i < Colunas; i++)

@@ -11,7 +11,9 @@ namespace SudokuDisplay.Models
 
         public Sudoku Sudoku { get; set; }
 
-        public SudokuEmpirico SudokuEmpirico { get; set; }
+        public SudokuHeuristico SudokuHeuristico { get; set; }
+
+        public int? NumerosAleatorios { get; set; }
 
         public bool IsBackTrack { get; set; }
 
@@ -21,7 +23,7 @@ namespace SudokuDisplay.Models
 
         public SudokuViewModel()
         {
-            SudokuEmpirico = new SudokuEmpirico();
+            SudokuHeuristico = new SudokuHeuristico();
 
             Sudoku = new Sudoku();
         }

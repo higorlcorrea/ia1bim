@@ -32,12 +32,13 @@
 <div class="">
 
     <ul class="nav nav-tabs" role="tablist">
-        <li role="presentation" class="@(Model.IsBackTrack ? "active" : "" )"><a href="#burro" aria-controls="burro" role="tab" data-toggle="tab">BackTrack</a></li>
-        <li role="presentation" class="@(Model.IsBackTrack ? " ": "active")"><a href="#empirico" aria-controls="empirico" role="tab" data-toggle="tab">Empírico</a></li>
+        <li role="presentation" class="@(Model.IsBackTrack ? "active" : "")"><a href="#burro" aria-controls="burro" role="tab" data-toggle="tab">BackTrack</a></li>
+        <li role="presentation" class="@(Model.IsBackTrack ? " ": "active")"><a href="#empirico" aria-controls="empirico" role="tab" data-toggle="tab">Heurístico</a></li>
+        <li role="presentation" class=""><a href="#aleatorio" aria-controls="empirico" role="tab" data-toggle="tab">Aleatório</a></li>
     </ul>
 
     <div class="tab-content">
-        <div role="tabpanel" class="tab-pane@(Model.IsBackTrack ? " active" : "" )" id="burro">
+        <div role="tabpanel" class="tab-pane@(Model.IsBackTrack ? " active" : "")" id="burro">
             @{Html.BeginForm("Backtrack", "Home", FormMethod.Post);}
             <div class="row">
                 <div class="col-md-12">
@@ -67,18 +68,18 @@
             @{Html.EndForm();}
         </div>
         <div role="tabpanel" class="tab-pane@(Model.IsBackTrack ? " " : " active")" id="empirico">
-            @{Html.BeginForm("Empirico", "Home", FormMethod.Post);}
+            @{Html.BeginForm("Heuristico", "Home", FormMethod.Post);}
             <div class="row">
                 <div class="col-md-12">
                     <table class="table table-bordered">
                         <tbody>
-                            @for (int i = 0; i < Model.SudokuEmpirico.Linhas; i++)
+                            @for (int i = 0; i < Model.SudokuHeuristico.Linhas; i++)
                             {
                                 <tr>
-                                    @for (int j = 0; j < Model.SudokuEmpirico.Colunas; j++)
+                                    @for (int j = 0; j < Model.SudokuHeuristico.Colunas; j++)
                                     {
                                         <td>
-                                            @Html.TextBoxFor(x => Model.SudokuEmpirico.Tabela[i][j], new { @class = "form-control input-sudoku", Value = Model.SudokuEmpirico.Tabela != null && Model.SudokuEmpirico.Tabela[i][j].HasValue ? Model.SudokuEmpirico.Tabela[i][j].ToString() : "" })
+                                            @Html.TextBoxFor(x => Model.SudokuHeuristico.Tabela[i][j], new { @class = "form-control input-sudoku", Value = Model.SudokuHeuristico.Tabela != null && Model.SudokuHeuristico.Tabela[i][j].HasValue ? Model.SudokuHeuristico.Tabela[i][j].ToString() : "" })
                                         </td>
                                     }
                                 </tr>
@@ -91,7 +92,38 @@
                 <br />
                 @Html.HiddenFor(x => x.IsBackTrack, new { Value = false })
                 <button class="btn btn-primary btn-raise" style="margin-right:50px;">Completar</button>
-                <button class="btn btn-secondary btn-raise limpar" type="button">Limpar</button>
+                <button class="btn btn-secondary btn-raised limpar" type="button">Limpar</button>
+            </div>
+            @{Html.EndForm();}
+        </div>
+        <div id="aleatorio" class="tab-pane" role="tabpanel">
+            @{Html.BeginForm("Aleatorio", "Home", FormMethod.Post);}
+            <div class="form-group">
+                <label class="control-label">Quantidade</label>
+                @Html.TextBoxFor(x => x.NumerosAleatorios, new { @class = "form-control" })
+            </div>
+            <div class="form-group">
+                <label class="control-label">Para qual modo</label>
+                <div class="row">
+                    <div class="col-md-2" style="padding-left:0px;">
+                        <div class="checkbox">
+                            <label>
+                                @Html.RadioButtonFor(x => x.IsBackTrack, true, new { }) BackTrack
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="checkbox">
+                            <label>
+                                @Html.RadioButtonFor(x => x.IsBackTrack, false, new { }) Heurístico
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row text-center">
+                <br />
+                <button class="btn btn-primary btn-raise" style="margin-right:50px;">Gerar</button>
             </div>
             @{Html.EndForm();}
         </div>
@@ -111,9 +143,9 @@
 
         $('.input-sudoku').mask('9');
         $(document).ready(function () {
-            
+            $('.dropdown-toggle').dropdown();
             $('li.active').click();
-            
+
             $('.limpar').click(function () {
                 var $this = $(this);
                 $this.parents('form').find('input:not(:hidden)').val('');
