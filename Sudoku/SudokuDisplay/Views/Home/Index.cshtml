@@ -148,7 +148,7 @@
         $(document).ready(function () {
             $('.dropdown-toggle').dropdown();
             $('li.active').click();
-            
+
             $('.limpar').click(function () {
                 var $this = $(this);
                 $this.parents('form').find('input:not(:hidden)').val('');
@@ -200,7 +200,7 @@
                                 retorno = JSON.parse(retorno);
                                 if (!retorno.Success) {
                                     $input.val('');
-                                    $input.attr('value','');
+                                    $input.attr('value', '');
                                     $('#modalError').find('.modal-body').html('<h3>' + retorno.Erro + '</h3>');
                                     $('#modalError').modal();
                                     $input.parent().removeClass('selected');

@@ -12,6 +12,7 @@ namespace SudokuDisplay.Controllers
         public ActionResult Index()
         {
             var model = new SudokuViewModel();
+            model.Possivel = true;
             model.IsBackTrack = true;
             return View(model);
         }
@@ -98,7 +99,7 @@ namespace SudokuDisplay.Controllers
                 {
                     model.SudokuHeuristico.Tabela = sudoku.Tabela;
                 }
-
+                model.Possivel = true;
             }
 
             return View("Index", model);
