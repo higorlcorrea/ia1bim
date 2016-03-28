@@ -30,14 +30,9 @@ namespace SudokuDisplay.Models
 
         #endregion
 
-        #region Métodos Protegidos
+        #region Métodos Públicos
 
-        protected List<int> TodosNumeros()
-        {
-            return new List<int> { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
-        }
-
-        protected void VerificarNumeros(int linha, int coluna, List<int> numeros)
+        public void VerificarNumeros(int linha, int coluna, List<int> numeros)
         {
             numeros.RemoveAll(x => Tabela[linha].Contains(x));
 
@@ -63,9 +58,10 @@ namespace SudokuDisplay.Models
             }
         }
 
-        #endregion
-
-        #region Métodos Públicos
+        public List<int> TodosNumeros()
+        {
+            return new List<int> { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+        }
 
         public override void Run()
         {

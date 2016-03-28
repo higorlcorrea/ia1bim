@@ -49,46 +49,35 @@ namespace SudokuDisplay.Controllers
         {
             if (model.NumerosAleatorios.HasValue && model.NumerosAleatorios.Value > 0 && model.NumerosAleatorios.Value < 81)
             {
-                var linha = 0;
-                var coluna = 0;
-                var numero = 0;
                 var random = new Random();
-                var sudoku = new Sudoku();
-                var valido = false;
-                var tentativas = 0;
+                var sudoku = new SudokuHeuristico();
                 sudoku.InicializarContexto();
                 var preenchidas = new List<string>();
 
                 for (int i = 0; i < model.NumerosAleatorios.Value; i++)
                 {
-                    while (!valido && tentativas < 3000)
+                    var linha = random.Next(8);
+                    var coluna = random.Next(8);
+
+                    if (preenchidas.All(x => x != linha + "," + coluna))
                     {
+                        var numeros = sudoku.TodosNumeros();
 
-                        linha = random.Next(8);
-                        coluna = random.Next(8);
+                        sudoku.VerificarNumeros(linha, coluna, numeros);
 
-                        numero = random.Next(1, 9);
-
-                        if (preenchidas.Where(x => x == linha + "," + coluna).Count() == 0 && sudoku.ValidarEntrada(linha, coluna, numero))
+                        if (numeros.Count > 0)
                         {
-                            sudoku.Tabela[linha][coluna] = numero;
+                            var index = random.Next(0, numeros.Count - 1);
+
+                            sudoku.Tabela[linha][coluna] = numeros.ElementAt(index);
+
                             preenchidas.Add(linha + "," + coluna);
-                            valido = true;
-                        }
-                        else
-                        {
-                            tentativas++;
                         }
                     }
-                    if (tentativas == 3000)
+                    else
                     {
-                        i = 0;
-                        preenchidas.Clear();
-                        sudoku.InicializarContexto();
+                        i--;
                     }
-
-                    tentativas = 0;
-                    valido = false;
                 }
 
                 if (model.IsBackTrack)
