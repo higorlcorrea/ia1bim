@@ -11,7 +11,7 @@ namespace SudokuDisplay.Models
 
         public Sudoku Sudoku { get; set; }
 
-        public SudokuHeuristico SudokuHeuristico { get; set; }
+        public SudokuHeuristico2 SudokuHeuristico { get; set; }
 
         public int? NumerosAleatorios { get; set; }
 
@@ -25,7 +25,7 @@ namespace SudokuDisplay.Models
 
         public SudokuViewModel()
         {
-            SudokuHeuristico = new SudokuHeuristico();
+            SudokuHeuristico = new SudokuHeuristico2();
 
             Sudoku = new Sudoku();
         }

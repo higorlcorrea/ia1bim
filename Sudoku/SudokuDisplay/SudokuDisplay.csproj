@@ -161,8 +161,10 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\Possibilidades.cs" />
     <Compile Include="Models\Quadro.cs" />
     <Compile Include="Models\Sudoku.cs" />
+    <Compile Include="Models\SudokuHeuristico2.cs" />
     <Compile Include="Models\SudokuHeuristico.cs" />
     <Compile Include="Models\SudokuViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
